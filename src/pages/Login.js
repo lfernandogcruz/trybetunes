@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+// import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+// import PropTypes from 'prop-types';
 import Loading from '../components/Loading';
 import { createUser } from '../services/userAPI';
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
+    // console.log(props);
     this.state = {
       inputName: '',
       disabledBtn: true,
@@ -35,11 +38,19 @@ export default class Login extends Component {
     }
   }
 
+  // reroute = () => {
+  //   window.location.href = '/search';
+  // }
+
   checkUser = async () => {
     const { inputName } = this.state;
+    // const { history } = this.props;
     this.setState({ loadScreen: true });
     await createUser({ name: inputName });
-    this.setState({ loadScreen: false });
+    // this.setState({ loadScreen: false });
+    // const navigate = useHistory();
+    // history.push('/search');
+    // window.location.pathname = '/search';
   }
 
   // disableButton(input) {
@@ -78,13 +89,15 @@ export default class Login extends Component {
                   />
                 </label>
                 <button
-                  type="button"
+                  type="submit"
                   data-testid="login-submit-button"
                   id="login-submit-button"
                   disabled={ disabledBtn }
                   onClick={ this.checkUser }
                 >
-                  Entrar
+                  <Link to="/search">
+                    Entrar
+                  </Link>
                 </button>
               </form>
             )
@@ -93,6 +106,10 @@ export default class Login extends Component {
     );
   }
 }
+
+// Login.propTypes = {
+//   history: PropTypes.objectOf(PropTypes.string).isRequired,
+// };
 
 // a rota / deve renderizar um componente chamado Login.
 // Este componente deve ter uma div com o atributo data-testid="page-login" que
