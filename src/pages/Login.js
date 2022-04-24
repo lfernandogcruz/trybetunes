@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import { useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 import Loading from '../components/Loading';
 import { createUser } from '../services/userAPI';
@@ -48,8 +48,9 @@ export default class Login extends Component {
     this.setState({ loadScreen: true });
     await createUser({ name: inputName });
     // this.setState({ loadScreen: false });
-    // const navigate = useHistory();
+    const navigate = () => useHistory;
     // history.push('/search');
+    navigate.push('/search');
     // window.location.pathname = '/search';
   }
 
@@ -89,15 +90,15 @@ export default class Login extends Component {
                   />
                 </label>
                 <button
-                  type="submit"
+                  type="button"
                   data-testid="login-submit-button"
                   id="login-submit-button"
                   disabled={ disabledBtn }
                   onClick={ this.checkUser }
                 >
-                  <Link to="/search">
-                    Entrar
-                  </Link>
+                  {/* <Link to="/search"> */}
+                  Entrar
+                  {/* </Link> */}
                 </button>
               </form>
             )
