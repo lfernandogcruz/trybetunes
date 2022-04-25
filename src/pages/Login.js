@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 import Loading from '../components/Loading';
@@ -45,12 +45,18 @@ export default class Login extends Component {
   checkUser = async () => {
     const { inputName } = this.state;
     // const { history } = this.props;
-    this.setState({ loadScreen: true });
+    this.setState({
+      loadScreen: true,
+      redirect: false,
+    });
     await createUser({ name: inputName });
-    // this.setState({ loadScreen: false });
-    const navigate = () => useHistory;
+    this.setState({
+      loadScreen: false,
+      redirect: true,
+    });
+    // const navigate = () => useHistory;
     // history.push('/search');
-    navigate.push('/search');
+    // navigate.push('/search');
     // window.location.pathname = '/search';
   }
 
@@ -68,7 +74,7 @@ export default class Login extends Component {
   // }
 
   render() {
-    const { disabledBtn, inputName, loadScreen } = this.state;
+    const { disabledBtn, inputName, loadScreen, redirect } = this.state;
 
     return (
       <div data-testid="page-login">
@@ -102,6 +108,11 @@ export default class Login extends Component {
                 </button>
               </form>
             )
+        }
+        {
+          redirect && (
+            <Redirect to="/search" />
+          )
         }
       </div>
     );
