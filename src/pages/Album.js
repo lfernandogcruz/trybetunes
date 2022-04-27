@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
+import Loading from '../components/Loading';
 import getMusics from '../services/musicsAPI';
 import MusicCard from '../components/MusicCard';
 
@@ -12,6 +13,7 @@ export default class Album extends Component {
       artName: '',
       albumCover: '',
       trackList: [],
+      loadScreen: false,
     };
   }
 
@@ -32,26 +34,26 @@ export default class Album extends Component {
   }
 
   render() {
-    const { artName, albumName, albumCover, trackList } = this.state;
+    const { artName, albumName, albumCover, trackList, loadScreen } = this.state;
+    if (loadScreen) {
+      return (<Loading />);
+    }
     return (
       <div data-testid="page-album">
         <Header />
-        Album
-        <h2 data-testid="artist-name">{ artName }</h2>
-        <h4 data-testid="album-name">{ albumName }</h4>
+        <h2 data-testid="artist-name">{artName}</h2>
+        <h4 data-testid="album-name">{albumName}</h4>
         <img src={ albumCover } alt={ albumName } />
         <ul>
-          {
-            trackList.map((track) => (
-              <MusicCard
-                key={ track.trackId }
-                trackName={ track.trackName }
-                previewUrl={ track.previewUrl }
-                trackId={ track.trackId }
-                musicObj={ track }
-              />
-            ))
-          }
+          {trackList.map((track) => (
+            <MusicCard
+              key={ track.trackId }
+              trackName={ track.trackName }
+              previewUrl={ track.previewUrl }
+              trackId={ track.trackId }
+              musicObj={ track }
+            />
+          ))}
         </ul>
       </div>
     );

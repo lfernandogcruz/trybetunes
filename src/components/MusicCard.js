@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 export default class MusicCard extends Component {
   constructor() {
@@ -11,17 +11,13 @@ export default class MusicCard extends Component {
       favList: [],
       checked: false,
     };
-    // this.favCheck = this.favCheck.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
   }
 
   onInputChange({ target }) {
     const { checked } = target;
     const { musicObj } = this.props;
-    //   // const update = target.checked;
-    //   this.setState({
-    //     favList: [{ [name]: checked }],
-    //   }, this.favCheck);
+
     if (checked) {
       this.setState((prevState) => ({
         favList: [...prevState.favList, musicObj],
@@ -35,15 +31,24 @@ export default class MusicCard extends Component {
     this.setState({ checked });
   }
 
-  // favCheck() {
-  //   const { musicObj } = this.props;
-  //   this.setState({
-  //     loadScreen: true,
-  //   }, async () => {
-  //     const addFav = await addSong(musicObj);
-  //   });
-  //   this.setState({ loadScreen: false });
-  // }
+  componentDidMount = async () => {
+    const { trackId } = this.props;
+    // this.setState({
+    //   loadScreen: true,
+    // });
+    const favs = await getFavoriteSongs();
+    const favFilter = favs.filter((fav) => fav.trackId === trackId);
+    this.setState({
+      // loadScreen: false,
+      favList: favFilter,
+    });
+    const { favList } = this.state;
+    favList.forEach((elFav) => {
+      if (elFav.trackId === trackId) {
+        this.setState({ checked: true });
+      }
+    });
+  }
 
   render() {
     const { trackName, previewUrl, trackId } = this.props;
@@ -84,6 +89,5 @@ MusicCard.propTypes = {
   trackName: PropTypes.string.isRequired,
   previewUrl: PropTypes.string.isRequired,
   trackId: PropTypes.number.isRequired,
-  // onInputChange: PropTypes.func.isRequired,
   musicObj: PropTypes.shape({}).isRequired,
 };
