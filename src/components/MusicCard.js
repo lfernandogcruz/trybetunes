@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 
 export default class MusicCard extends Component {
   constructor() {
@@ -18,17 +18,26 @@ export default class MusicCard extends Component {
     const { checked } = target;
     const { musicObj } = this.props;
 
+    this.setState((prevState) => ({
+      favList: [...prevState.favList, musicObj],
+      loadScreen: true,
+    }));
+
     if (checked) {
-      this.setState((prevState) => ({
-        favList: [...prevState.favList, musicObj],
-        loadScreen: true,
+      this.setState({
         checked,
-      }), async () => {
+      }, async () => {
         await addSong(musicObj);
         this.setState({ loadScreen: false });
       });
+    } else {
+      this.setState({
+        checked,
+      }, async () => {
+        await removeSong(musicObj);
+        this.setState({ loadScreen: false });
+      });
     }
-    this.setState({ checked });
   }
 
   componentDidMount = async () => {
